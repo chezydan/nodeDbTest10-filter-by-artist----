@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  
+</head>
+ <body class="--gray"   >
+<a href="/works.html">works </a>
+
+  
+<h1> Great Composers for   G=</h1>
+<p> artist of the day : <span id="artist">default artist </span>.</p>
+   
+     </div>
+   </>
+  <input type='text' id='inpArtist' value="default_" />
+   <button class='btn' id="btnSetArtist"> set Artist of today </button>
+  <div ><div id='getData'>  </div>
+
+   <script  >
+   
+
+    const spnArtist=document.getElementById('artist')
+    const inpArtist=document.getElementById('inpArtist')
+    const btnSetArtist=document.getElementById('btnSetArtist')
+    const divGetData=document.getElementById('getData')
+    //variables or info to pass to POST's body
+
+  
+
+ async function setPost(){ 
+
+   const artist = spnArtist.innerHTML
+  //data info
+  data = {artist}
+// prepare options
+   
+    const options={
+      method: "POST", 
+      headers: {
+        "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    }
+    //recieve     response     fecth( route, options obj)
+    const response = await fetch('/myroute', options)
+    const json = await response.json()
+    console.log(json)
+   }
+
+     btnSetArtist.addEventListener('click',
+          ()=>{
+            spnArtist.innerHTML=inpArtist.value
+            setPost()
+          }                                )
+   
+     setPost()
+   
+let dataInClient
+
+     //fetch, store response, (show)
+     async function getData(){
+       //fetch
+      const response = await fetch('/myroute')
+       //store response in var
+      dataInClient =  await response.json()
+    //(show)
+       console.log(dataInClient)
+       dataInClient.map(  (itm)=>{
+          const cart = document.createElement("div")
+         
+          cart.classList.add("cart")
+         const name=document.createElement("h3")
+         const life=document.createElement("p")
+         name.innerHTML=itm.name
+         life.innerHTML=itm.Birth +" - "+ itm.Death
+         let photo=document.createElement("img")
+         photo.src= itm.url
+         cart.append(name,life,photo)
+        divGetData.append(cart)    
+       })
+   // divGetData.innerHTML=JSON.stringify(dataInClient) 
+   
+ }  
+     getData()
+     
+  </script >
+
+  
+   
+</body>
+
+</html>

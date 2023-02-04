@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  
+</head>
+
+  
+ <body class="--gray">
+  <a href="index.html"> home </a>
+
+   
+ <div id="divInsert">
+<h6>form</h6>
+    <input type="text" id="inpWorkName" placeholder="work"> 
+  </input>
+    <input type="text" id="inpUrl" placeholder="url"></input>
+    <input type="text" id="inpDuration"  value=100 placeholder='duration'></input>
+ <select id="selArtist"> <option value="-">-</option>  </select>
+<button id="btnSubmit" class='btn'>submit</button>   
+
+  </div>
+   <div id="divSearch">
+     <select id="selSearchArtist" ><option value="0">-</option>        </select>    
+    </div>
+
+   <div id="divShow" >
+      
+    <p>show</p>
+    <p id="pItemId" ></p>
+  </div>    
+   
+  <script>
+const selSearchArtist = document.getElementById('selSearchArtist')
+    
+async function getData(){
+        const response = await fetch('/myroute')
+       const dbContent = await response.json()
+
+       dbContent.map(  (itm)=>
+         {
+           names.push({"name":itm.name, "id":itm._id} )
+         })
+    //   console.log(names)
+       popSelect() 
+ }
+function popSelect(){   
+    console.log(names)   
+  names.forEach( (itm) =>{
+  let opt = document.createElement('option')
+     let optS = document.createElement('option')
+    opt.value = optS.value=itm.id
+  opt.innerHTML  =optS.innerHTML=itm.name
+  document.querySelector("#selArtist").append(opt)
+    selSearchArtist.append(optS)
+
+})
+    }
+
+
+    
+  const names=[]
+  
+getData()
+
+
+async function setPostWorks(){
+  const selArtist = document.querySelector('#selArtist')
+ const docWorks=
+ { "duration":document.getElementById('inpDuration').value, 
+  "workName":document.querySelector('#inpWorkName').value,
+ 'url':document.querySelector('#inpUrl').value,
+  'artist': selArtist.options[selArtist.selectedIndex].text,
+ 'artistID':selArtist.value}
+     
+// prepare options
+ const options={
+  method:"POST",
+  headers:{"Content-Type":"application/json"},
+  body:JSON.stringify(docWorks)
+}
+
+  const response = await fetch('/works', options)
+    const json = await response.json()
+ //   console.log(json)
+   }
+
+ 
+
+    
+document.querySelector('#btnSubmit').addEventListener('click',
+  ()=>{setPostWorks() 
+       getWorks()
+      }                                                  )
+
+let worksInClient 
+  
+async function getWorks(){
+ const response = await fetch('/works')
+   worksInClient= await response.json()
+
+  if (selSearchArtist.value==="0"){
+      
+  }else{
+     worksInClient=   worksInClient.filter((itm)=>{
+      return itm.artistID === selSearchArtist.value
+    })
+  }
+  
+  //console.log(worksInClient)
+  document.getElementById('divShow').innerHTML=""
+  worksInClient.forEach((itm)=>
+    {
+   
+       const cart = document.createElement('div')
+      cart.classList.add('cart')
+      const workName= document.createElement('h2')
+      workName.innerHTML=itm.workName
+      const url= document.createElement('a')
+      url.href=itm.url
+      url.innerHTML= itm.workName
+      url.target="_blank"
+      const artist =  document.createElement('h4')
+      artist.innerHTML= itm.artist
+      
+      cart.append(workName)
+      cart.append(url)
+      cart.append(artist)
+
+      document.getElementById('divShow').classList.add('dataContainer')
+      document.getElementById('divShow').append(cart)
+      
+    }
+   
+  )//forEach
+}
+    
+selSearchArtist.addEventListener('change',()=>{
+  getWorks()
+})
+  getWorks()
+</script>
+  
+ </body>
+  
+</html>
